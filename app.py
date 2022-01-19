@@ -1,6 +1,3 @@
-from asyncio import tasks
-from crypt import methods
-import imp
 import os
 from flask import (Flask, flash, render_template,
                    redirect, request, session, url_for)
@@ -29,6 +26,25 @@ def get_brews():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if request.method == "POST":
+        # Check if username exists
+        user = mongo.db.Users.find_one(
+            {"username": request.form.get("username").lower()})
+        
+        if user:
+            flash("Username already exists")
+            return redirect(url_for("register"))
+        
+        register = {
+            "username": request.form.get("username").lower(),
+            "password": generate_password_hash(request.form.get("password"))
+        }
+        mongo.db.Users.insert_one(register)
+
+        # Add new user to session
+        session["user"] = request.form.get("username").lower()
+        flash("Registration successful!")
+
     return render_template("register.html")
 
 
