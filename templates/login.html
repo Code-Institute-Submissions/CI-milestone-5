@@ -3,7 +3,7 @@
   <form
     class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
     method="POST"
-    action="{{ url_for('register') }}"
+    action="{{ url_for('login') }}"
   >
     <!-- Username -->
     <div class="mb-4">
@@ -45,13 +45,13 @@
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="submit"
       >
-        Register
+        Login
       </button>
       <a
         class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-        href="{{ url_for('login') }}"
+        href="{{ url_for('register') }}"
       >
-        Login
+        Register
       </a>
     </div>
   </form>
