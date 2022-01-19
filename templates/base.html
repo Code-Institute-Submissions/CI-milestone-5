@@ -12,14 +12,27 @@
         <!-- Top navbar -->
         <nav class="lg:flex bg-blue-300 p-6">
             <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Home</a>
-            <a href="{{ url_for('get_brews')}}" class="mr-6 text-gray-900 hover:text-gray-500">Brews</a>
+            <a href="{{ url_for('get_brews') }}" class="mr-6 text-gray-900 hover:text-gray-500">Brews</a>
             <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Users</a>
             <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Profile</a>
             <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Login</a>
             <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Logout</a>
-            <a href="#" class="mr-6 text-gray-900 hover:text-gray-500">Register</a>
+            <a href="{{ url_for('register') }}" class="mr-6 text-gray-900 hover:text-gray-500">Register</a>
         </nav>
     </header>
+
+    <section>
+        <!-- Flashed Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </section>
 
     <!-- Content injected by inhereted templates -->
     {% block content %}
