@@ -1,6 +1,8 @@
 # Custom .gitignore
 env.py
 
+node_modules/
+
 ## Github Pytohn .gitignore template
 # Byte-compiled / optimized / DLL files
 __pycache__/
