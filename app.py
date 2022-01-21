@@ -1,4 +1,5 @@
 import os
+from datetime import date, datetime
 from flask import (Flask, flash, render_template,
                    redirect, request, session, url_for)
 from flask_pymongo import PyMongo
@@ -97,6 +98,18 @@ def logout():
 
 @app.route("/new_brew", methods=["GET", "POST"])
 def new_brew():
+    if request.method == "POST":
+        date = datetime.now()
+        brew = {
+            "name": request.form.get("name"),
+            "description": request.form.get("description"),
+            "flavour": request.form.get("flavour"),
+            "created_by": session["user"],
+            "created_on": date.strftime("%d/%m/%y")
+        }
+        mongo.db.Brews.insert_one(brew)
+        flash("Brew added!")
+
     flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
     return render_template("new_brew.html", flavours=flavours)
 
