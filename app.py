@@ -95,6 +95,12 @@ def logout():
     return redirect("login")
 
 
+@app.route("/new_brew", methods=["GET", "POST"])
+def new_brew():
+    flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
+    return render_template("new_brew.html", flavours=flavours)
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
