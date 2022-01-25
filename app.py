@@ -21,8 +21,8 @@ mongo = PyMongo(app)
 # Displays a list of 6 most recent brews and 6 most recent users
 @app.route("/")
 def home():
-    brews = mongo.db.Brews.find().sort("_id", -1)
-    users = mongo.db.Users.find().sort("_id", -1)
+    brews = mongo.db.Brews.find().sort("_id", -1).limit(6)
+    users = mongo.db.Users.find().sort("_id", -1).limit(6)
 
     return render_template("index.html", brews=brews, users=users)
 
@@ -97,7 +97,7 @@ def profile(username):
     # Retrieve user in session from database
     username = mongo.db.Users.find_one(
         {"username": session["user"]})["username"]
-    brews = mongo.db.Brews.find({"created_by": username}).sort("_id", -1)
+    brews = mongo.db.Brews.find({"created_by": username}).sort("_id", -1).limit(6)
 
     if session["user"]:
         return render_template("profile.html", username=username, brews=brews)
