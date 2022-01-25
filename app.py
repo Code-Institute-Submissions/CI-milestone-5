@@ -18,6 +18,7 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 
+# Displays a list of 6 most recent brews and 6 most recent users
 @app.route("/")
 def home():
     brews = mongo.db.Brews.find().sort("_id", -1)
@@ -26,12 +27,14 @@ def home():
     return render_template("index.html", brews=brews, users=users)
 
 
+# Displays all posted brews
 @app.route("/get_brews")
 def get_brews():
     brews = mongo.db.Brews.find()
     return render_template("brews.html", brews=brews)
 
 
+# Displays a list of all registered users
 @app.route("/get_users")
 def get_users():
     users = mongo.db.Users.find()
@@ -109,6 +112,13 @@ def logout():
     return redirect("login")
 
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    query = request.form.get("search")
+    brews = mongo.db.Brews.find({"$text": {"$search": query}})
+    return render_template("brews.html", brews=brews)
+
+
 @app.route("/new_brew", methods=["GET", "POST"])
 def new_brew():
     if request.method == "POST":
@@ -166,13 +176,21 @@ def delete_brew(id):
 def post_comment(brew_id):
     date = datetime.now()
     comment = {
-        "text": request.form["comment"],
+        "text": request.form.get("comment"),
         "created_by": session["user"],
         "created_on": date.strftime("%d/%m/%y"),
         "brew_id": ObjectId(brew_id)
     }
     mongo.db.Comments.insert_one(comment)
     flash("Comment posted!")
+
+    return redirect(url_for("brew", id=brew_id))
+
+
+@app.route("/delete_comment/<brew_id>/<id>")
+def delete_comment(id, brew_id):
+    mongo.db.Comments.delete_one({"_id": ObjectId(id)})
+    flash("Comment removed!")
 
     return redirect(url_for("brew", id=brew_id))
 
