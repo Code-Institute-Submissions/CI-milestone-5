@@ -114,6 +114,12 @@ def new_brew():
     return render_template("new_brew.html", flavours=flavours)
 
 
+@app.route("/brew/<id>")
+def brew(id):
+    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+    return render_template("brew.html", brew=brew)
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
