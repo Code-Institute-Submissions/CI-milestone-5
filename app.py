@@ -97,9 +97,10 @@ def profile(username):
     # Retrieve user in session from database
     username = mongo.db.Users.find_one(
         {"username": session["user"]})["username"]
+    brews = mongo.db.Brews.find({"created_by": username}).sort("_id", -1)
 
     if session["user"]:
-        return render_template("profile.html", username=username)
+        return render_template("profile.html", username=username, brews=brews)
 
     return redirect(url_for("login"))
 
