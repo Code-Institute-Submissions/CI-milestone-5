@@ -130,7 +130,9 @@ def new_brew():
 @app.route("/brew/<id>")
 def brew(id):
     brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
-    return render_template("brew.html", brew=brew)
+    comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
+
+    return render_template("brew.html", brew=brew, comments=comments)
 
 
 @app.route("/edit_brew/<id>", methods=["GET", "POST"])
@@ -158,6 +160,21 @@ def delete_brew(id):
     flash("Brew removed!")
 
     return redirect(url_for("get_brews"))
+
+
+@app.route("/post_comment/<brew_id>", methods=["POST"])
+def post_comment(brew_id):
+    date = datetime.now()
+    comment = {
+        "text": request.form["comment"],
+        "created_by": session["user"],
+        "created_on": date.strftime("%d/%m/%y"),
+        "brew_id": ObjectId(brew_id)
+    }
+    mongo.db.Comments.insert_one(comment)
+    flash("Comment posted!")
+
+    return redirect(url_for("brew", id=brew_id))
 
 
 if __name__ == "__main__":
