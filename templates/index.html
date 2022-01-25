@@ -5,7 +5,11 @@
 <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
     {% for brew in brews %}
         <div class="rounded overflow-hidden shadow-lg">
-            <img class="w-full" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
+            {% if brew.image_url%}
+                <img class="w-full" src="{{ brew.image_url }}" alt="Coffee">
+            {% else %}
+                <img class="w-full" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
+            {% endif %}
             <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2">
                     <a href="{{ url_for('brew', id=brew._id)}}">

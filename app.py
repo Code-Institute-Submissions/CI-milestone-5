@@ -5,6 +5,7 @@ from flask import (Flask, flash, render_template,
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
+from google.cloud import storage
 if os.path.exists("env.py"):
     import env
 
@@ -16,6 +17,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
+CLOUD_STORAGE_BUCKET = os.environ.get("CLOUD_STORAGE_BUCKET")
 
 
 # Displays a list of 6 most recent brews and 6 most recent users
@@ -124,10 +126,29 @@ def search():
 def new_brew():
     if request.method == "POST":
         date = datetime.now()
+
+        # Retrieve uploaded image
+        image_file = request.files.get("image")
+        flash(request.files.get("image").filename)
+        image_url = ""
+
+        if image_file:
+            # Send to Google Cloud Storage bucket
+            gcs = storage.Client()
+            bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
+            blob = bucket.blob(image_file.filename)
+            blob.upload_from_string(
+                image_file.read(),
+                content_type=image_file.content_type
+            )
+            blob.make_public()
+            image_url = blob.public_url
+
         brew = {
             "name": request.form.get("name"),
             "description": request.form.get("description"),
             "flavour": request.form.get("flavour"),
+            "image_url": image_url,
             "created_by": session["user"],
             "created_on": date.strftime("%d/%m/%y")
         }
