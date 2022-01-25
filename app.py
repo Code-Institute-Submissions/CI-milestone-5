@@ -120,6 +120,33 @@ def brew(id):
     return render_template("brew.html", brew=brew)
 
 
+@app.route("/edit_brew/<id>", methods=["GET", "POST"])
+def edit_brew(id):
+    if request.method == "POST":
+        edited_brew = {
+            "name": request.form.get("name"),
+            "description": request.form.get("description"),
+            "flavour": request.form.get("flavour"),
+            "created_by": session["user"],
+        }
+        mongo.db.Brews.update_one({"_id": ObjectId(id)}, {"$set": edited_brew})
+        flash("Brew edited!")
+        return redirect(url_for("brew", id=id))
+
+    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+    flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
+
+    return render_template("edit_brew.html", brew=brew, flavours=flavours)
+
+
+@app.route("/delete_brew/<id>")
+def delete_brew(id):
+    mongo.db.Brews.delete_one({"_id": ObjectId(id)})
+    flash("Brew removed!")
+
+    return redirect(url_for("get_brews"))
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),

@@ -9,8 +9,8 @@
   <div class="px-6 py-4">
     <div class="font-bold text-xl mb-2">{{ brew.name }}</div>
     {% if (brew.created_by == session['user']) %}
-    <a href="#">Edit</a>
-    <a href="#">Delete</a>
+    <a href="{{ url_for('edit_brew', id=brew._id) }}">Edit</a>
+    <a href="{{ url_for('delete_brew', id=brew._id) }}">Delete</a>
     {% endif %}
     <div class="font-bold text-lg mb-2">{{ brew.created_by }}</div>
     <p class="text-gray-700 text-base">{{ brew.description }}</p>
