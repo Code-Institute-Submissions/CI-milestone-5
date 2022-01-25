@@ -19,10 +19,23 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
+def home():
+    brews = mongo.db.Brews.find().sort("_id", -1)
+    users = mongo.db.Users.find().sort("_id", -1)
+
+    return render_template("index.html", brews=brews, users=users)
+
+
 @app.route("/get_brews")
 def get_brews():
     brews = mongo.db.Brews.find()
     return render_template("brews.html", brews=brews)
+
+
+@app.route("/get_users")
+def get_users():
+    users = mongo.db.Users.find()
+    return render_template("users.html", users=users)
 
 
 @app.route("/register", methods=["GET", "POST"])
