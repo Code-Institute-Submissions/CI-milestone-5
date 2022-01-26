@@ -129,7 +129,6 @@ def new_brew():
 
         # Retrieve uploaded image
         image_file = request.files.get("image")
-        flash(request.files.get("image").filename)
         image_url = ""
 
         if image_file:
