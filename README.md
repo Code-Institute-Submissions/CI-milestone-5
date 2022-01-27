@@ -11,7 +11,17 @@ You can see the deployed version [here](http://our-over.herokuapp.com/).
 
 ### 1.2. User Stories
 
-- As a user,
+- As a user without an account, I want to register for an account.
+- As a signed out user, I want to log in.
+- As a signed in user, I want to sign out.
+- As a signed in user, I want to view my profile.
+- As a signed in user, I want to create a Brew post.
+- As a signed in user, I want to edit my Brew post.
+- As a signed in user, I want to delete my Brew post.
+- As a signed in user, I want to comment on a brew post.
+- As a signed in user, I want to delete my comment on a brew post.
+- As a user, I want to view a Brew post.
+- As a user, I want to search for a Brew post.
 
 ### 1.3. Design
 
