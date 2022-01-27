@@ -20,9 +20,9 @@ mongo = PyMongo(app)
 CLOUD_STORAGE_BUCKET = os.environ.get("CLOUD_STORAGE_BUCKET")
 
 
-# Displays a list of 6 most recent brews and 6 most recent users
 @app.route("/")
 def home():
+    """Displays a list of 6 most recent brews and 6 most recent users"""
     brews = mongo.db.Brews.find().sort("_id", -1).limit(6)
     users = mongo.db.Users.find().sort("_id", -1).limit(6)
 
@@ -32,6 +32,7 @@ def home():
 # Displays all posted brews
 @app.route("/get_brews")
 def get_brews():
+    """Returns list of posted brews"""
     brews = mongo.db.Brews.find()
     return render_template("brews.html", brews=brews)
 
@@ -39,12 +40,14 @@ def get_brews():
 # Displays a list of all registered users
 @app.route("/get_users")
 def get_users():
+    """Returns list of logged in users"""
     users = mongo.db.Users.find()
     return render_template("users.html", users=users)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Returns and processes form for user registration"""
     if request.method == "POST":
         # Check if username exists
         user = mongo.db.Users.find_one(
@@ -70,6 +73,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Returns and processes form for user login"""
     if request.method == "POST":
         # Check if username exists
         user = mongo.db.Users.find_one(
@@ -96,10 +100,12 @@ def login():
 
 @app.route("/user/<username>", methods=["GET", "POST"])
 def profile(username):
+    """Returns profile template for currently logged in user"""
     # Retrieve user in session from database
     username = mongo.db.Users.find_one(
         {"username": session["user"]})["username"]
-    brews = mongo.db.Brews.find({"created_by": username}).sort("_id", -1).limit(6)
+    brews = mongo.db.Brews.find(
+        {"created_by": username}).sort("_id", -1).limit(6)
 
     if session["user"]:
         return render_template("profile.html", username=username, brews=brews)
@@ -109,6 +115,7 @@ def profile(username):
 
 @app.route("/logout")
 def logout():
+    """Removes user cookies from session, logging user out"""
     # remove user from session
     flash("You have logged out")
     session.pop("user")
@@ -117,14 +124,19 @@ def logout():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
+    """Returns brews template with brews from search query"""
+    # Using premade index in the mongo database search Brew titles and descriptions
     query = request.form.get("search")
     brews = mongo.db.Brews.find({"$text": {"$search": query}})
+
     return render_template("brews.html", brews=brews)
 
 
 @app.route("/new_brew", methods=["GET", "POST"])
 def new_brew():
+    """Returns and processes form for brew post creation"""
     if request.method == "POST":
+        # Create date object for current time
         date = datetime.now()
 
         # Retrieve uploaded image
@@ -155,11 +167,13 @@ def new_brew():
         flash("Brew added!")
 
     flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
+
     return render_template("new_brew.html", flavours=flavours)
 
 
 @app.route("/brew/<id>")
 def brew(id):
+    """Returns brew template for entered id"""
     brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
     comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
 
@@ -168,6 +182,7 @@ def brew(id):
 
 @app.route("/edit_brew/<id>", methods=["GET", "POST"])
 def edit_brew(id):
+    """Returns and processes brew edit form for entered id"""
     if request.method == "POST":
         edited_brew = {
             "name": request.form.get("name"),
@@ -175,6 +190,7 @@ def edit_brew(id):
             "flavour": request.form.get("flavour"),
             "created_by": session["user"],
         }
+        # Updates brew entry with edited information
         mongo.db.Brews.update_one({"_id": ObjectId(id)}, {"$set": edited_brew})
         flash("Brew edited!")
         return redirect(url_for("brew", id=id))
@@ -187,6 +203,7 @@ def edit_brew(id):
 
 @app.route("/delete_brew/<id>")
 def delete_brew(id):
+    """Deleted brew with entered id"""
     mongo.db.Brews.delete_one({"_id": ObjectId(id)})
     flash("Brew removed!")
 
@@ -195,13 +212,17 @@ def delete_brew(id):
 
 @app.route("/post_comment/<brew_id>", methods=["POST"])
 def post_comment(brew_id):
+    """Enters new comment in Comments collection with entered entered brew id"""
     date = datetime.now()
+
+    # Create comment object
     comment = {
         "text": request.form.get("comment"),
         "created_by": session["user"],
         "created_on": date.strftime("%d/%m/%y"),
         "brew_id": ObjectId(brew_id)
     }
+    # Insert into Comments collection
     mongo.db.Comments.insert_one(comment)
     flash("Comment posted!")
 
@@ -210,6 +231,8 @@ def post_comment(brew_id):
 
 @app.route("/delete_comment/<brew_id>/<id>")
 def delete_comment(id, brew_id):
+    """Deletes comment with id from Comments collection, then redirects back to associated brew page"""
+    # Delete comment with id from Comments collection
     mongo.db.Comments.delete_one({"_id": ObjectId(id)})
     flash("Comment removed!")
 
