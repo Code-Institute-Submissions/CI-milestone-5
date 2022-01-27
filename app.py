@@ -201,6 +201,10 @@ def new_brew():
 def brew(id):
     """Returns brew template for entered id"""
     brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+
+    if not brew:
+        abort(404)
+
     comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
 
     return render_template("brew.html", brew=brew, comments=comments)
@@ -212,8 +216,11 @@ def edit_brew(id):
     """Returns and processes brew edit form for entered id"""
     brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
 
+    if not brew:
+        abort(404)
+
     if brew["created_by"] != session["user"]:
-        abort(401)
+        abort(403)
 
     if request.method == "POST":
         edited_brew = {
@@ -227,7 +234,6 @@ def edit_brew(id):
         flash("Brew edited!")
         return redirect(url_for("brew", id=id))
 
-    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
     flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
 
     return render_template("edit_brew.html", brew=brew, flavours=flavours)
@@ -239,8 +245,11 @@ def delete_brew(id):
     """Deleted brew with entered id"""
     brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
 
+    if not brew:
+        abort(404)
+
     if brew["created_by"] != session["user"]:
-        abort(401)
+        abort(403)
 
     mongo.db.Brews.delete_one({"_id": ObjectId(id)})
     flash("Brew removed!")
@@ -274,8 +283,11 @@ def delete_comment(id, brew_id):
     """Deletes comment with id from Comments collection, then redirects back to associated brew page"""
     comment = mongo.db.Comments.find_one({"_id": ObjectId(id)})
 
+    if not comment:
+        abort(404)
+
     if comment.created_by != session["user"]:
-        abort(401)
+        abort(403)
 
     # Delete comment with id from Comments collection
     mongo.db.Comments.delete_one({"_id": ObjectId(id)})
