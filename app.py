@@ -200,12 +200,13 @@ def new_brew():
 @app.route("/brew/<id>")
 def brew(id):
     """Returns brew template for entered id"""
-    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+    # If try fails due to missing resources, throws 404
+    try:
+        brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+        comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
 
-    if not brew:
+    except:
         abort(404)
-
-    comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
 
     return render_template("brew.html", brew=brew, comments=comments)
 
@@ -214,11 +215,15 @@ def brew(id):
 @authenticated
 def edit_brew(id):
     """Returns and processes brew edit form for entered id"""
-    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+    # If try fails due to missing resources, 404
+    try:
+        brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+        flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
 
-    if not brew:
+    except:
         abort(404)
 
+    # If the session user isn't the brew's author, 403
     if brew["created_by"] != session["user"]:
         abort(403)
 
@@ -230,11 +235,10 @@ def edit_brew(id):
             "created_by": session["user"],
         }
         # Updates brew entry with edited information
-        mongo.db.Brews.update_one({"_id": ObjectId(id)}, {"$set": edited_brew})
+        mongo.db.Brews.update_one(
+            {"_id": ObjectId(id)}, {"$set": edited_brew})
         flash("Brew edited!")
         return redirect(url_for("brew", id=id))
-
-    flavours = mongo.db.Flavours.find().sort("flavour_name", 1)
 
     return render_template("edit_brew.html", brew=brew, flavours=flavours)
 
@@ -243,9 +247,10 @@ def edit_brew(id):
 @authenticated
 def delete_brew(id):
     """Deleted brew with entered id"""
-    brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
+    try:
+        brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
 
-    if not brew:
+    except:
         abort(404)
 
     if brew["created_by"] != session["user"]:
@@ -281,9 +286,10 @@ def post_comment(brew_id):
 @authenticated
 def delete_comment(id, brew_id):
     """Deletes comment with id from Comments collection, then redirects back to associated brew page"""
-    comment = mongo.db.Comments.find_one({"_id": ObjectId(id)})
+    try:
+        comment = mongo.db.Comments.find_one({"_id": ObjectId(id)})
 
-    if not comment:
+    except:
         abort(404)
 
     if comment.created_by != session["user"]:
@@ -294,6 +300,16 @@ def delete_comment(id, brew_id):
     flash("Comment removed!")
 
     return redirect(url_for("brew", id=brew_id))
+
+
+@app.errorhandler(403)
+def error_403(e):
+    return render_template("403.html"), 403
+
+
+@app.errorhandler(404)
+def error_404(e):
+    return render_template("404.html"), 404
 
 
 if __name__ == "__main__":
