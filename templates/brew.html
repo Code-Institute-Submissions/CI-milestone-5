@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block title %} {{ brew.name }} {% endblock %}
+{% block content %}
 
 <div class="rounded overflow-hidden shadow-lg">
     {% if brew.image_url%}
