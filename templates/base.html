@@ -7,24 +7,39 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>OurOver - {% block title %}{% endblock %}</title>
 </head>
-<body>
+<body class="bg-gray-100">
     <header>
         <!-- Top navbar -->
-        <nav class="lg:flex bg-blue-300 p-6">
-            <a href="{{ url_for('home') }}" class="mr-6 text-gray-900 hover:text-gray-500">Home</a>
-            <a href="{{ url_for('get_brews') }}" class="mr-6 text-gray-900 hover:text-gray-500">Brews</a>
-            <a href="{{ url_for('get_users') }}" class="mr-6 text-gray-900 hover:text-gray-500">Users</a>
+        <nav class="flex content-center bg-blue-300 p-4">
+            <a href="{{ url_for('get_brews') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Home</a>
             {% if session.user %}
-                <a href="{{ url_for('new_brew') }}" class="mr-6 text-gray-900 hover:text-gray-500">Add Brew</a>
-                <a href="{{ url_for('profile', username=session['user']) }}" class="mr-6 text-gray-900 hover:text-gray-500">Profile</a>
-                <a href="{{ url_for('logout') }}" class="mr-6 text-gray-900 hover:text-gray-500">Logout</a>
+                <a href="{{ url_for('new_brew') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Add Brew</a>
+                <a href="{{ url_for('profile', username=session['user']) }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Profile</a>
+                <a href="{{ url_for('logout') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Logout</a>
             {% else %}
-                <a href="{{ url_for('login') }}" class="mr-6 text-gray-900 hover:text-gray-500">Login</a>
-                <a href="{{ url_for('register') }}" class="mr-6 text-gray-900 hover:text-gray-500">Register</a>
+                <a href="{{ url_for('login') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Login</a>
+                <a href="{{ url_for('register') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Register</a>
             {% endif %}
-            <form action="{{ url_for('search') }}" method="post">
-                <input type="text" name="search" id="search" placeholder="Search..." minlength="3" required>
-                <button type="submit">Search</button>
+            <form
+                class="ml-auto"
+                action="{{ url_for('search') }}"
+                method="post"
+            >
+                <input
+                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                    name="search"
+                    id="search"
+                    placeholder="Search..."
+                    minlength="3"
+                    required
+                >
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                >
+                Search
+                </button>
             </form>
         </nav>
     </header>
@@ -43,8 +58,11 @@
     </section>
 
     <!-- Content injected by inhereted templates -->
-    {% block content %}
-    {% endblock %}
+    <div
+        class="flex items-center justify-center"
+    >
+    {% block content %}{% endblock %}
+    </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
