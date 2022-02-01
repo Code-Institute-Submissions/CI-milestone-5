@@ -24,11 +24,13 @@
         >
     </div>
     
-    <form action="{{ url_for('post_comment', brew_id=brew._id) }}" method="post">
-        <label for="comment">Comment:</label>
-        <input type="text" name="comment" id="comment" required minlength="10">
-        <button type="submit">Post Comment</button>
-    </form>
+    {% if session['user'] %}
+        <form action="{{ url_for('post_comment', brew_id=brew._id) }}" method="post">
+            <label for="comment">Comment:</label>
+            <input type="text" name="comment" id="comment" required minlength="10">
+            <button type="submit">Post Comment</button>
+        </form>
+    {% endif %}
     <ul>
         {% for comment in comments %}
         <li>{{comment.text}}</li>
