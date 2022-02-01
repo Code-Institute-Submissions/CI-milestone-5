@@ -14,7 +14,7 @@
             <a href="{{ url_for('get_brews') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Home</a>
             {% if session.user %}
                 <a href="{{ url_for('new_brew') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Add Brew</a>
-                <a href="{{ url_for('profile', username=session['user']) }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Profile</a>
+                <a href="{{ url_for('profile') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Profile</a>
                 <a href="{{ url_for('logout') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="font-bold py-2 px-3 mr-6 text-gray-900 hover:text-gray-500">Login</a>
