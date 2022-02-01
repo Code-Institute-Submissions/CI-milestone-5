@@ -472,6 +472,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   position: static;
 }
 
+.m-8 {
+  margin: 2rem;
+}
+
 .mr-6 {
   margin-right: 1.5rem;
 }
@@ -526,6 +530,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-sm {
+  max-width: 24rem;
+}
+
+.resize {
+  resize: both;
 }
 
 .appearance-none {
@@ -685,6 +697,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-semibold {
   font-weight: 600;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
 .leading-tight {
