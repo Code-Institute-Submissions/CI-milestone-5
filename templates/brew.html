@@ -2,45 +2,77 @@
 {% block title %} {{ brew.name }} {% endblock %}
 {% block content %}
 
-<div class="rounded overflow-hidden shadow-lg">
-    {% if brew.image_url%}
-        <img class="w-1/4" src="{{ brew.image_url }}" alt="Coffee">
-    {% else %}
-        <img class="w-1/4" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
-    {% endif %}
-    <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">{{ brew.name }}</div>
-        {% if (brew.created_by == session['user']) %}
-        <a href="{{ url_for('edit_brew', id=brew._id) }}">Edit</a>
-        <a href="{{ url_for('delete_brew', id=brew._id) }}">Delete</a>
-        {% endif %}
-        <div class="font-bold text-lg mb-2">{{ brew.created_by }}</div>
-        <p class="text-gray-700 text-base">{{ brew.description }}</p>
-    </div>
-    <div class="px-6 pt-4 pb-2">
-        <span
-        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-        >{{ brew.flavour }}</span
+<div class="w-11/12 rounded m-8 overflow-hidden shadow-lg">
+        <div
+            class="flex lg:flex-row flex-col"
         >
-    </div>
-    
-    {% if session['user'] %}
-        <form action="{{ url_for('post_comment', brew_id=brew._id) }}" method="post">
-            <label for="comment">Comment:</label>
-            <input type="text" name="comment" id="comment" required minlength="10">
-            <button type="submit">Post Comment</button>
-        </form>
-    {% endif %}
-    <ul>
-        {% for comment in comments %}
-        <li>{{comment.text}}</li>
-        {% if comment.created_by == session['user'] %}
-        <a href="{{ url_for('delete_comment', id=comment._id, brew_id=brew._id) }}">
-            Delete
-        </a>
+        {% if brew.image_url%}
+            <img class="w-full lg:w-1/4" src="{{ brew.image_url }}" alt="Coffee">
+        {% else %}
+            <img class="w-full lg:w-1/4" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
         {% endif %}
+        <div class="flex flex-col px-6 py-4 w-full lg:w-3/4">
+            <div
+                class="flex flex-row justify-between w-full"
+            >
+                <div class="font-bold text-xl mb-2">{{ brew.name }}</div>
+                {% if (brew.created_by == session['user']) %}
+                <div>
+                    <a
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        href="{{ url_for('edit_brew', id=brew._id) }}">Edit</a>
+                    <a
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        href="{{ url_for('delete_brew', id=brew._id) }}">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="font-bold text-lg mb-2">{{ brew.created_by }}</div>
+            <p class="text-gray-700 text-base">{{ brew.description }}</p>
+            <div class="pt-4 mt-auto">
+                <span
+                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                >{{ brew.flavour }}</span
+                >
+            </div>
+        </div>
+    </div> 
+    <div
+        class="flex flex-col items-center justify-center"
+    >
+        {% if session['user'] %}
+            <form class="mt-2 mb-2 w-full flex flex-row items-center justify-center" action="{{ url_for('post_comment', brew_id=brew._id) }}" method="post">
+                <input
+                    class="shadow appearance-none border rounded w-5/12 mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                    name="comment"
+                    id="comment"
+                    placeholder="Comment"
+                    required
+                    minlength="10"
+                >
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                >Post</button>
+            </form>
+        {% endif %}
+        {% for comment in comments %}
+            <div
+                class="my-2 w-full flex flex-row items-center justify-center"
+            >
+                <p
+                    class="bg-white shadow appearance-none border rounded w-1/2 mr-2 py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                >{{comment.text}}</p>
+                {% if comment.created_by == session['user'] %}
+                    <a
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded float-right focus:outline-none focus:shadow-outline"
+                        href="{{ url_for('delete_comment', id=comment._id, brew_id=brew._id) }}"
+                    >Delete</a>
+                {% endif %}
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 
 {% endblock %}
