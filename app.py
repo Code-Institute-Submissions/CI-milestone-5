@@ -242,6 +242,7 @@ def delete_brew(id):
         abort(403)
 
     mongo.db.Brews.delete_one({"_id": ObjectId(id)})
+    mongo.db.Comments.delete_many({"brew_id": ObjectId(id)})
     flash("Brew removed!")
 
     return redirect(url_for("get_brews"))
