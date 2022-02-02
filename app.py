@@ -55,19 +55,12 @@ def home():
 
 
 # Displays all posted brews
+@app.route("/")
 @app.route("/get_brews")
 def get_brews():
     """Returns list of posted brews"""
     brews = mongo.db.Brews.find()
     return render_template("brews.html", brews=brews)
-
-
-# Displays a list of all registered users
-@app.route("/get_users")
-def get_users():
-    """Returns list of logged in users"""
-    users = mongo.db.Users.find()
-    return render_template("users.html", users=users)
 
 
 @app.route("/register", methods=["GET", "POST"])

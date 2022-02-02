@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block title %} Brews {% endblock %}
 {% block content %}
 
 <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
@@ -25,6 +25,8 @@
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ brew.flavour }}</span>
             </div>
         </div>
+    {% else %}
+        <h2>No brews found</h2>
     {% endfor %}
 </div>
 

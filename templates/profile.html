@@ -1,10 +1,6 @@
 {% extends "base.html" %}
+{% block title %} My Brews {% endblock %}
 {% block content %}
-    <div class="flex mb-4">
-        <div class="w-full bg-gray-500 h-12">
-            <h2 class="text-gray-900">{{ username }}</h3>
-        </div>
-    </div>
     <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
         {% for brew in brews %}
             <div class="rounded overflow-hidden shadow-lg">
