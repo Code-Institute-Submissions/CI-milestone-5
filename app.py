@@ -45,21 +45,12 @@ def unauthenticated(function):
     return wrapper
 
 
-@app.route("/")
-def home():
-    """Displays a list of 6 most recent brews and 6 most recent users"""
-    brews = mongo.db.Brews.find().sort("_id", -1).limit(6)
-    users = mongo.db.Users.find().sort("_id", -1).limit(6)
-
-    return render_template("index.html", brews=brews, users=users)
-
-
 # Displays all posted brews
 @app.route("/")
 @app.route("/get_brews")
 def get_brews():
     """Returns list of posted brews"""
-    brews = mongo.db.Brews.find()
+    brews = mongo.db.Brews.find().sort("_id", -1).limit(25)
     return render_template("brews.html", brews=brews)
 
 
@@ -124,7 +115,7 @@ def profile():
     """Returns profile template for currently logged in user"""
     # Retrieve Brews posted by session user
     brews = mongo.db.Brews.find(
-        {"created_by": session["user"]}).sort("_id", -1).limit(6)
+        {"created_by": session["user"]}).sort("_id", -1).limit(25)
 
     return render_template("profile.html", brews=brews)
 
@@ -279,14 +270,6 @@ def post_comment(brew_id):
 @authenticated
 def delete_comment(id, brew_id):
     """Deletes comment with id from Comments collection, then redirects back to associated brew page"""
-    try:
-        comment = mongo.db.Comments.find_one({"_id": ObjectId(id)})
-
-    except:
-        abort(404)
-
-    if comment.created_by != session["user"]:
-        abort(403)
 
     # Delete comment with id from Comments collection
     mongo.db.Comments.delete_one({"_id": ObjectId(id)})
