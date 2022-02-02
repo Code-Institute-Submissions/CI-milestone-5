@@ -1,8 +1,6 @@
 const name_input = document.getElementById("name");
 const description_input = document.getElementById("description");
 
-const description_pattern = /(.|\s)*^[\w]+(.|\s)*$/;
-
 name_input.addEventListener("input", (evt) => {
     if(name_input.validity.valid){
         name_input.style.borderColor = "green";
@@ -12,7 +10,7 @@ name_input.addEventListener("input", (evt) => {
 })
 
 description_input.addEventListener("input", (evt) => {
-    if(description_pattern.test(description_input.value)) {
+    if(description_input.validity.valid) {
         description_input.style.borderColor = "green";
     } else {
         description_input.style.borderColor = "red";
