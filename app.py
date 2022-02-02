@@ -187,7 +187,8 @@ def brew(id):
     # If try fails due to missing resources, throws 404
     try:
         brew = mongo.db.Brews.find_one({"_id": ObjectId(id)})
-        comments = mongo.db.Comments.find({"brew_id": ObjectId(id)})
+        comments = mongo.db.Comments.find(
+            {"brew_id": ObjectId(id)}).sort("_id", -1).limit(25)
 
     except:
         abort(404)
