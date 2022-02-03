@@ -134,7 +134,8 @@ def logout():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     """Returns brews template with brews from search query"""
-    # Using premade index in the mongo database search Brew titles and descriptions
+    # Using premade index in the mongo database
+    # search Brew titles and descriptions
     query = request.form.get("search")
     brews = mongo.db.Brews.find({"$text": {"$search": query}})
 
@@ -251,7 +252,9 @@ def delete_brew(id):
 @app.route("/post_comment/<brew_id>", methods=["POST"])
 @authenticated
 def post_comment(brew_id):
-    """Enters new comment in Comments collection with entered entered brew id"""
+    """
+    Enters new comment in Comments collection with entered entered brew id
+    """
     date = datetime.now()
 
     # Create comment object
@@ -271,7 +274,10 @@ def post_comment(brew_id):
 @app.route("/delete_comment/<brew_id>/<id>")
 @authenticated
 def delete_comment(id, brew_id):
-    """Deletes comment with id from Comments collection, then redirects back to associated brew page"""
+    """
+    Deletes comment with id from Comments collection,
+    then redirects back to associated brew page
+    """
 
     # Delete comment with id from Comments collection
     mongo.db.Comments.delete_one({"_id": ObjectId(id)})
