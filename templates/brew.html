@@ -7,9 +7,9 @@
             class="flex lg:flex-row flex-col"
         >
         {% if brew.image_url%}
-            <img class="w-full lg:w-1/4" src="{{ brew.image_url }}" alt="Coffee">
+            <img class="w-full lg:w-1/4 object-cover object-center" src="{{ brew.image_url }}" alt="Coffee">
         {% else %}
-            <img class="w-full lg:w-1/4" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
+            <img class="w-full lg:w-1/4 object-cover object-center" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
         {% endif %}
         <div class="flex flex-col px-6 py-4 w-full lg:w-3/4">
             <div
