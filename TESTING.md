@@ -16,8 +16,6 @@ The PEP8 validator returned no issues:
 | iPhone 6/7/8 |       ✅       |
 | iPhone X/XS  |       ✅       |
 
-![Am I Responsive Results](readme-images/AmIResponsive.png)
-
 ## Browser Compatibility
 
 Browsers tested:
