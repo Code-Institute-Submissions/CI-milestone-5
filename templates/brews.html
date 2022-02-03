@@ -6,17 +6,21 @@
     {% for brew in brews %}
         <a href="{{ url_for('brew', id=brew._id)}}">
             <div class="brew rounded overflow-hidden shadow-lg">
-                {% if brew.image_url%}
-                    <img class="w-full max-h-80 object-cover" src="{{ brew.image_url }}" alt="Coffee">
-                {% else %}
-                    <img class="w-full max-h-80 object-cover" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
-                {% endif %}
+                <div
+                    class="flex relative w-full h-48 bg-gray-200 overflow-hidden"
+                >
+                    {% if brew.image_url%}
+                        <img class="max-w-full h-[100%] m-auto object-fill object-center" src="{{ brew.image_url }}" alt="Coffee">
+                    {% else %}
+                        <img class="max-w-full h-[100%] m-auto object-fill object-center" src="{{ url_for('static', filename='images/coffee.jpg') }}" alt="Coffee">
+                    {% endif %}
+                </div>
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">
                             {{ brew.name }}
                     </div>
                     <div class="font-bold text-lg mb-2">{{ brew.created_by }}</div>
-                    <p class="text-gray-700 text-base h-48 overflow-y-clip text-ellipsis">
+                    <p class="text-gray-700 text-base h-48 overflow-y-clip text-ellipsis break-words">
                         {{ brew.description }}
                     </p>
                 </div>
