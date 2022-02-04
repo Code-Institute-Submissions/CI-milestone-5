@@ -16,6 +16,8 @@ The PEP8 validator returned no issues:
 | iPhone 6/7/8 |       ✅       |
 | iPhone X/XS  |       ✅       |
 
+![AmIResponsive](readme-images/amiresponsive.png)
+
 ## Browser Compatibility
 
 Browsers tested:
@@ -54,5 +56,6 @@ In this testing I found no issues with responsiveness or functionality.
 ## Bugs
 
 - During testing I discovered many issues with user authentication that were the result of insecure endpoints, I resolved this by creating a python decorator to mark all routes that required authentication
+- Setting up Google Cloud Storage on Heroku proved somewhat difficult but was resolved by using a .profile file to create the required authentification file from environment variables on heroku build completion
 
 [return to README](README.md)
